@@ -1,1 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bayana — Precision Compliance Infrastructure for Agentic Commerce</title>
+<meta name="description" content="The world's first institutional-grade, AI-native pre-transaction compliance control plane. Built for organizations that cannot afford to be wrong.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #080810;
+  --surface1:  #0f0f1a;
+  --surface2:  #16162a;
+  --surface3:  #1e1e35;
+  --gold:      #c9a96e;
+  --gold-light:#e8d5a3;
+  --gold-grad: linear-gradient(135deg,#c9a96e 0%,#e8d5a3 50%,#c9a96e 100%);
+  --indigo:    #6366f1;
+  --text:      #f0ede8;
+  --text2:     #8b8a9e;
+  --text3:     #4a4a6a;
+  --border:    rgba(255,255,255,0.06);
+  --ease:      cubic-bezier(0.16,1,0.3,1);
+  --ease-out:  cubic-bezier(0.22,1,0.36,1);
+  --serif:     'Cormorant Garamond', Georgia, serif;
+  --sans:      'Inter', sans-serif;
+  --mono:      'JetBrains Mono', monospace;
+}
 
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) var(--surface1);
+}
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--surface1); }
+::-webkit-scrollbar-thumb { background:var(--gold); border-radius:3px; }
+::selection { background:var(--gold); color:#080810; }
+:focus-visible { outline:2px solid var(--gold); outline-offset:4px; }
+
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat:repeat;
+  background-size:128px 128px;
+}
+
+.overline {
+  font-family:var(--sans);
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--gold);
+  display:block;
+}
+.gold-rule {
+  display:block;
+  width:48px;
+  height:1px;
+  background:var(--gold);
+  margin:16px 0 20px;
+}
+.serif { font-family:var(--serif); }
+
+.reveal {
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity 900ms var(--ease), transform 900ms var(--ease);
+}
+.reveal.visible { opacity:1; transform:none; }
+.reveal-delay-1 { transition-delay:100ms; }
+.reveal-delay-2 { transition-delay:200ms; }
+.reveal-delay-3 { transition-delay:300ms; }
+.reveal-delay-4 { transition-delay:400ms; }
+.reveal-delay-5 { transition-delay:500ms; }
+
+/* ── NAVIGATION ── */
+nav {
+  position:sticky;
+  top:0;
+  z-index:200;
+  padding:0 40px;
+  height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  transition:all 600ms var(--ease);
+  border-bottom:1px solid transparent;
+}
+nav.scrolled {
+  background:rgba(8,8,16,.88);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom-color:rgba(201,169,110,.12);
+}
+.nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+.logo-mark { width:22px; height:22px; flex-shrink:0; }
+.logo-wordmark {
+  font-family:var(--sans);
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:.25em;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+.nav-links { display:flex; gap:36px; list-style:none; }
+.nav-links a {
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--text2);
+  text-decoration:none;
+  transition:color 300ms;
+}
+.nav-links a:hover { color:var(--text); }
+.nav-ctas { display:flex; align-items:center; gap:12px; }
+
+.btn-ghost {
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(201,169,110,.4);
+  background:none;
+  padding:9px 18px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:all 300ms;
+  border-radius:2px;
+}
+.btn-ghost:hover { border-color:var(--gold); background:rgba(201,169,110,.06); letter-spacing:.12em; }
+
+.btn-gold {
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#0a0a14;
+  background:var(--gold-grad);
+  border:none;
+  padding:10px 20px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:all 300ms;
+  border-radius:2px;
+  white-space:nowrap;
+}
+.btn-gold:hover { letter-spacing:.12em; box-shadow:0 4px 24px rgba(201,169,110,.3); }
+
+.nav-hamburger {
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  background:none;
+  border:none;
+  padding:8px;
+}
+.nav-hamburger span { display:block; width:22px; height:1px; background:var(--gold); transition:all 300ms; }
+
+#mobile-menu {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:500;
+  background:rgba(8,8,16,.97);
+  backdrop-filter:blur(24px);
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:40px;
+}
+#mobile-menu.open { display:flex; }
+#mobile-menu a {
+  font-family:var(--serif);
+  font-size:36px;
+  font-weight:400;
+  color:var(--text);
+  text-decoration:none;
+  transition:color 300ms;
+}
+#mobile-menu a:hover { color:var(--gold); }
+#menu-close { position:absolute; top:24px; right:28px; background:none; border:none; color:var(--text2); font-size:28px; cursor:pointer; }
+
+/* ── REQUEST ACCESS MODAL ── */
+#access-modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:600;
+  background:rgba(8,8,16,.92);
+  backdrop-filter:blur(24px);
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+#access-modal.open { display:flex; }
+.modal-box {
+  background:var(--surface1);
+  border:1px solid rgba(201,169,110,.18);
+  border-radius:6px;
+  padding:48px;
+  max-width:520px;
+  width:100%;
+  position:relative;
+  box-shadow:0 40px 100px rgba(0,0,0,.7);
+}
+.modal-close {
+  position:absolute;
+  top:20px;
+  right:24px;
+  background:none;
+  border:none;
+  color:var(--text3);
+  font-size:22px;
+  cursor:pointer;
+  transition:color 200ms;
+}
+.modal-close:hover { color:var(--gold); }
+.modal-overline { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:block; }
+.modal-title { font-family:var(--serif); font-size:32px; font-weight:400; color:var(--text); margin-bottom:8px; }
+.modal-sub { font-size:13px; color:var(--text2); line-height:1.7; margin-bottom:28px; }
+.modal-field { margin-bottom:16px; }
+.modal-label { font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--text3); display:block; margin-bottom:6px; }
+.modal-input,
+.modal-textarea {
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:11px 14px;
+  font-family:var(--sans);
+  font-size:13px;
+  color:var(--text);
+  outline:none;
+  transition:border-color 200ms;
+}
+.modal-input:focus, .modal-textarea:focus { border-color:rgba(201,169,110,.35); }
+.modal-textarea { resize:vertical; min-height:100px; }
+.modal-submit {
+  width:100%;
+  margin-top:8px;
+  padding:14px;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.modal-success {
+  display:none;
+  text-align:center;
+  padding:20px 0;
+}
+.modal-success-icon { font-size:40px; margin-bottom:16px; display:block; }
+.modal-success-title { font-family:var(--serif); font-size:26px; font-weight:400; color:var(--gold); margin-bottom:8px; }
+.modal-success-msg { font-size:13px; color:var(--text2); line-height:1.7; }
+
+/* ── HERO ── */
+#hero {
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:120px 40px 80px;
+  overflow:hidden;
+  cursor:crosshair;
+}
+#hero::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201,169,110,.06) 0%, transparent 70%);
+  pointer-events:none;
+}
+#hero::after {
+  content:'';
+  position:absolute;
+  bottom:0; left:0; right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,169,110,.15),transparent);
+}
+.hero-inner { max-width:900px; width:100%; text-align:center; position:relative; z-index:1; }
+.hero-overline { font-size:11px; font-weight:500; letter-spacing:.25em; text-transform:uppercase; color:var(--gold); margin-bottom:28px; display:block; }
+.hero-h1 {
+  font-family:var(--serif);
+  font-size:clamp(42px,7.5vw,92px);
+  font-weight:400;
+  line-height:1.05;
+  letter-spacing:-.01em;
+  color:var(--text);
+  margin-bottom:32px;
+}
+.hero-h1 em { font-style:italic; color:var(--gold-light); }
+.hero-sub { font-size:17px; font-weight:300; line-height:1.75; color:var(--text2); max-width:640px; margin:0 auto 48px; }
+.hero-ctas { display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap; margin-bottom:64px; }
+.hero-proof { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); margin-bottom:0; }
+
+/* ── DASHBOARD SECTION ── */
+#dashboard-section {
+  position:relative;
+  padding:100px 40px;
+  overflow:hidden;
+}
+#dashboard-section::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(99,102,241,.04) 0%, transparent 70%);
+}
+.dashboard-label { text-align:center; margin-bottom:60px; }
+.dashboard-label h2 { font-family:var(--serif); font-size:clamp(32px,4vw,52px); font-weight:400; color:var(--text); margin-bottom:12px; }
+.dashboard-label p { font-size:15px; color:var(--text2); max-width:500px; margin:0 auto; }
+
+.nuru-dashboard {
+  max-width:1200px;
+  margin:0 auto;
+  background:var(--surface1);
+  border:1px solid rgba(201,169,110,.1);
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(201,169,110,.05);
+}
+
+.db-topbar {
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.db-topbar-left { display:flex; align-items:center; gap:20px; }
+.db-brand { font-family:var(--sans); font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); }
+.db-status-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 8px rgba(34,197,94,.6);
+  animation:pulse-green 2s infinite;
+  display:inline-block; margin-right:6px;
+}
+@keyframes pulse-green {
+  0%,100%{ box-shadow:0 0 8px rgba(34,197,94,.6); }
+  50%{ box-shadow:0 0 14px rgba(34,197,94,.9); }
+}
+.db-status-text { font-size:11px; letter-spacing:.08em; color:#22c55e; text-transform:uppercase; }
+.db-topbar-right { display:flex; align-items:center; gap:16px; }
+.db-date { font-family:var(--mono); font-size:10px; color:var(--text3); letter-spacing:.06em; }
+.db-alert-badge { background:rgba(201,169,110,.15); border:1px solid rgba(201,169,110,.3); border-radius:2px; padding:3px 8px; font-size:10px; letter-spacing:.08em; color:var(--gold); font-weight:500; }
+
+.db-nav { background:var(--surface2); border-bottom:1px solid var(--border); padding:0 20px; display:flex; gap:0; overflow-x:auto; }
+.db-nav-item { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); padding:12px 16px; cursor:pointer; border-bottom:2px solid transparent; transition:all 250ms; white-space:nowrap; }
+.db-nav-item.active { color:var(--gold); border-bottom-color:var(--gold); }
+.db-nav-item:hover { color:var(--text2); }
+
+.db-body { display:grid; grid-template-columns:220px 1fr; min-height:560px; }
+
+.db-sidebar { background:rgba(10,10,20,.5); border-right:1px solid var(--border); padding:20px 0; }
+.db-sidebar-section { padding:0 16px; margin-bottom:24px; }
+.db-sidebar-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; padding:0 4px; }
+.db-sidebar-item { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border-radius:3px; cursor:pointer; transition:background 200ms; margin-bottom:2px; }
+.db-sidebar-item:hover { background:rgba(255,255,255,.04); }
+.db-sidebar-item.active { background:rgba(201,169,110,.08); border-left:2px solid var(--gold); padding-left:8px; }
+.db-sidebar-item-icon { width:14px; height:14px; opacity:.6; flex-shrink:0; }
+.db-sidebar-item-text { font-size:11px; letter-spacing:.04em; color:var(--text2); flex:1; }
+.db-sidebar-item.active .db-sidebar-item-text { color:var(--gold); }
+.db-sidebar-badge { font-size:9px; font-family:var(--mono); color:#0a0a14; background:var(--gold); border-radius:10px; padding:1px 6px; font-weight:600; }
+.db-sidebar-badge.red { background:#ef4444; color:#fff; }
+.db-sidebar-badge.green { background:#22c55e; color:#0a1a0a; }
+
+.db-health-bar { padding:12px 16px; margin:8px 12px; background:rgba(201,169,110,.04); border:1px solid rgba(201,169,110,.1); border-radius:3px; }
+.db-health-label { font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--text3); margin-bottom:10px; }
+.db-health-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; gap:8px; }
+.db-health-name { font-size:10px; color:var(--text2); min-width:80px; letter-spacing:.03em; }
+.db-health-track { flex:1; height:3px; background:rgba(255,255,255,.06); border-radius:2px; overflow:hidden; }
+.db-health-fill { height:100%; border-radius:2px; background:var(--gold); transition:width 1500ms var(--ease); }
+.db-health-fill.green { background:#22c55e; }
+.db-health-val { font-family:var(--mono); font-size:10px; color:var(--gold); min-width:32px; text-align:right; }
+
+.db-main { padding:20px; overflow:hidden; }
+
+.db-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px; }
+.db-kpi { background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:12px 14px; transition:all 300ms; }
+.db-kpi:hover { border-color:rgba(201,169,110,.2); transform:translateY(-2px); }
+.db-kpi-label { font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.db-kpi-value { font-family:var(--mono); font-size:20px; font-weight:400; color:var(--text); line-height:1; margin-bottom:4px; }
+.db-kpi-value.gold { color:var(--gold); }
+.db-kpi-value.green { color:#22c55e; }
+.db-kpi-value.red { color:#ef4444; }
+.db-kpi-sub { font-size:9px; letter-spacing:.06em; color:var(--text3); }
+.db-kpi-delta { font-size:9px; color:#22c55e; letter-spacing:.04em; }
+
+.db-hold-alert {
+  background:linear-gradient(135deg, rgba(201,169,110,.08) 0%, rgba(201,169,110,.04) 100%);
+  border:1px solid rgba(201,169,110,.25);
+  border-radius:4px;
+  padding:14px 16px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  position:relative;
+  overflow:hidden;
+}
+.db-hold-alert::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--gold); }
+.db-hold-icon { width:32px; height:32px; background:rgba(201,169,110,.12); border:1px solid rgba(201,169,110,.3); border-radius:3px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; }
+.db-hold-content { flex:1; min-width:0; }
+.db-hold-title { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+.hold-tag { font-size:9px; letter-spacing:.1em; background:rgba(201,169,110,.15); border:1px solid rgba(201,169,110,.2); border-radius:2px; padding:2px 6px; color:var(--gold-light); }
+.db-hold-desc { font-size:11px; color:var(--text2); margin-bottom:10px; line-height:1.5; }
+.db-hold-meta { display:flex; gap:20px; flex-wrap:wrap; }
+.db-hold-meta-item { font-family:var(--mono); font-size:10px; color:var(--text3); }
+.db-hold-meta-item span { color:var(--text2); }
+.db-hold-actions { display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+.db-action-btn { font-size:10px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; padding:7px 14px; border-radius:2px; cursor:pointer; border:1px solid; transition:all 200ms; white-space:nowrap; }
+.db-action-release { background:rgba(34,197,94,.1); border-color:rgba(34,197,94,.3); color:#22c55e; }
+.db-action-release:hover { background:rgba(34,197,94,.2); }
+.db-action-reject { background:rgba(239,68,68,.08); border-color:rgba(239,68,68,.25); color:#ef4444; }
+.db-action-reject:hover { background:rgba(239,68,68,.15); }
+.db-action-escalate { background:rgba(99,102,241,.08); border-color:rgba(99,102,241,.25); color:#818cf8; }
+.db-action-escalate:hover { background:rgba(99,102,241,.15); }
+
+.db-charts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.db-chart-card { background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:14px; }
+.db-chart-title { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--text3); margin-bottom:14px; }
+.db-latency-chart { position:relative; height:72px; }
+.db-latency-chart svg { width:100%; height:100%; }
+
+.db-corridors { }
+.db-corridor-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.03); }
+.db-corridor-row:last-child { border-bottom:none; }
+.db-corridor-flag { font-size:14px; width:20px; text-align:center; }
+.db-corridor-name { font-size:11px; color:var(--text2); flex:1; letter-spacing:.03em; }
+.db-corridor-vol { font-family:var(--mono); font-size:10px; color:var(--text); min-width:70px; text-align:right; }
+.db-corridor-bar-wrap { width:80px; }
+.db-corridor-bar { height:3px; background:rgba(255,255,255,.06); border-radius:2px; overflow:hidden; }
+.db-corridor-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--indigo),var(--gold)); transition:width 1500ms var(--ease); }
+.db-corridor-status { font-size:9px; letter-spacing:.08em; text-transform:uppercase; padding:2px 6px; border-radius:2px; min-width:48px; text-align:center; }
+.status-clear { background:rgba(34,197,94,.1); color:#22c55e; border:1px solid rgba(34,197,94,.2); }
+.status-monitor { background:rgba(245,158,11,.1); color:#f59e0b; border:1px solid rgba(245,158,11,.2); }
+
+.db-audit-feed { margin-top:14px; background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:14px; max-height:180px; overflow-y:auto; }
+.db-audit-feed::-webkit-scrollbar { width:3px; }
+.db-audit-feed::-webkit-scrollbar-thumb { background:var(--text3); }
+.db-audit-title { font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--text3); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.db-audit-live { display:inline-flex; align-items:center; gap:4px; font-size:9px; color:#22c55e; letter-spacing:.08em; }
+.db-audit-live::before { content:''; width:5px; height:5px; border-radius:50%; background:#22c55e; animation:pulse-green 1.5s infinite; }
+.db-log-entry { display:flex; align-items:baseline; gap:10px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.02); font-family:var(--mono); font-size:10px; }
+.db-log-entry:last-child { border-bottom:none; }
+.db-log-ts { color:var(--text3); white-space:nowrap; flex-shrink:0; }
+.db-log-type { padding:1px 5px; border-radius:2px; font-size:9px; letter-spacing:.06em; text-transform:uppercase; flex-shrink:0; }
+.log-hold { background:rgba(201,169,110,.12); color:var(--gold); }
+.log-clear { background:rgba(34,197,94,.1); color:#22c55e; }
+.log-kyc { background:rgba(99,102,241,.1); color:#818cf8; }
+.log-kya { background:rgba(168,85,247,.1); color:#c084fc; }
+.db-log-msg { color:var(--text2); flex:1; line-height:1.4; }
+.db-log-hash { color:var(--text3); flex-shrink:0; font-size:9px; }
+
+/* ── SECTION CONTAINERS ── */
+section { position:relative; }
+.container { max-width:1200px; margin:0 auto; padding:0 40px; }
+.section-pad { padding:120px 0; }
+
+/* ── PHILOSOPHY ── */
+#philosophy { border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.philosophy-inner { max-width:760px; margin:0 auto; text-align:center; }
+.philosophy-manifesto { font-family:var(--serif); font-size:clamp(19px,2.2vw,24px); font-weight:300; line-height:1.75; color:var(--text); margin-bottom:80px; }
+.philosophy-manifesto em { font-style:italic; color:var(--gold-light); }
+.pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:48px; text-align:left; }
+.pillar-num { font-family:var(--serif); font-size:28px; font-weight:300; color:var(--gold); margin-bottom:14px; }
+.pillar-title { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--text); margin-bottom:14px; }
+.pillar-body { font-size:14px; line-height:1.75; color:var(--text2); }
+
+/* ── FEATURE SECTIONS ── */
+.feature-section { padding:100px 0; border-bottom:1px solid var(--border); }
+.feature-section:nth-child(even) .feature-inner { flex-direction:row-reverse; }
+.feature-inner { max-width:1200px; margin:0 auto; padding:0 40px; display:flex; align-items:center; gap:80px; }
+.feature-text { flex:1; min-width:0; }
+.feature-num { font-family:var(--mono); font-size:11px; font-weight:400; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; margin-bottom:24px; display:flex; align-items:center; gap:10px; }
+.feature-num::after { content:''; display:block; width:32px; height:1px; background:var(--gold); opacity:.5; }
+.feature-h2 { font-family:var(--serif); font-size:clamp(32px,3.5vw,50px); font-weight:400; line-height:1.15; color:var(--text); margin-bottom:20px; }
+.feature-body { font-size:16px; line-height:1.8; color:var(--text2); margin-bottom:0; max-width:480px; }
+.feature-demo { flex:1; min-width:0; min-height:300px; }
+
+.code-panel { background:var(--surface1); border:1px solid rgba(201,169,110,.1); border-radius:4px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+.code-panel-header { background:var(--surface2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.code-dots { display:flex; gap:6px; }
+.code-dot { width:10px; height:10px; border-radius:50%; }
+.code-dot-r { background:rgba(239,68,68,.5); }
+.code-dot-y { background:rgba(245,158,11,.5); }
+.code-dot-g { background:rgba(34,197,94,.5); }
+.code-label { font-family:var(--mono); font-size:10px; color:var(--text3); letter-spacing:.08em; }
+.copy-btn { font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--text3); background:none; border:1px solid var(--border); padding:4px 10px; border-radius:2px; cursor:pointer; transition:all 200ms; }
+.copy-btn:hover { color:var(--gold); border-color:rgba(201,169,110,.3); }
+.copy-btn.copied { color:#22c55e; border-color:rgba(34,197,94,.3); }
+pre { padding:20px; font-family:var(--mono); font-size:12.5px; line-height:1.7; overflow-x:auto; color:var(--text2); }
+pre .k { color:#c792ea; }
+pre .s { color:#c3e88d; }
+pre .n { color:#82aaff; }
+pre .v { color:var(--gold-light); }
+pre .c { color:var(--text3); font-style:italic; }
+.cursor-blink { display:inline-block; width:8px; height:14px; background:var(--gold); animation:blink 1.1s step-end infinite; vertical-align:middle; margin-left:2px; }
+@keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+.response-fade { opacity:0; transition:opacity 600ms; }
+.response-fade.show { opacity:1; }
+
+.workflow-panel { background:var(--surface1); border:1px solid rgba(201,169,110,.1); border-radius:4px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.4); padding:20px; }
+.workflow-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.workflow-chip { font-size:11px; font-weight:500; letter-spacing:.06em; padding:7px 14px; border-radius:100px; border:1px solid var(--border); cursor:pointer; transition:all 250ms; color:var(--text2); background:transparent; }
+.workflow-chip:hover { border-color:rgba(201,169,110,.3); color:var(--text); }
+.workflow-chip.active { background:rgba(201,169,110,.1); border-color:rgba(201,169,110,.4); color:var(--gold); }
+.workflow-session { background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:14px; min-height:120px; }
+.workflow-session-label { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
+.workflow-steps { display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
+.workflow-step { display:flex; align-items:center; gap:4px; }
+.workflow-step-pill { font-size:11px; padding:5px 12px; border-radius:100px; background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.25); color:#818cf8; letter-spacing:.04em; }
+.workflow-arrow { color:var(--gold); font-size:12px; opacity:.5; }
+
+.api-key-card { background:var(--surface1); border:1px solid rgba(201,169,110,.15); border-radius:4px; padding:28px; box-shadow:0 0 60px rgba(201,169,110,.06), 0 20px 60px rgba(0,0,0,.4); position:relative; overflow:hidden; }
+.api-key-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(201,169,110,.05) 0%,transparent 60%); pointer-events:none; }
+.api-key-shimmer { animation:shimmer 3s ease-in-out; }
+@keyframes shimmer { 0%{ box-shadow:0 0 60px rgba(201,169,110,.06); } 50%{ box-shadow:0 0 80px rgba(201,169,110,.2), 0 0 160px rgba(201,169,110,.08); } 100%{ box-shadow:0 0 60px rgba(201,169,110,.06); } }
+.api-key-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
+.api-key-value { font-family:var(--mono); font-size:14px; color:var(--gold-light); background:var(--surface2); padding:12px 16px; border-radius:3px; border:1px solid var(--border); letter-spacing:.04em; margin-bottom:16px; word-break:break-all; }
+.api-key-meta { display:flex; gap:20px; flex-wrap:wrap; }
+.api-key-meta-item { font-size:11px; color:var(--text3); letter-spacing:.06em; }
+.api-key-meta-item span { color:#22c55e; }
+
+.calc-panel { background:var(--surface1); border:1px solid rgba(201,169,110,.1); border-radius:4px; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+.calc-slider-wrap { margin-bottom:24px; }
+.calc-slider-label { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.calc-slider-name { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--text2); }
+.calc-slider-val { font-family:var(--mono); font-size:14px; color:var(--gold); }
+input[type=range] { -webkit-appearance:none; width:100%; height:3px; background:var(--surface3); border-radius:2px; outline:none; cursor:pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; background:var(--gold); border-radius:50%; box-shadow:0 0 12px rgba(201,169,110,.4); transition:transform 200ms; }
+input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.2); }
+.calc-breakdown { border-top:1px solid var(--border); padding-top:16px; }
+.calc-line { display:flex; justify-content:space-between; align-items:center; padding:6px 0; }
+.calc-line-label { font-size:12px; color:var(--text2); letter-spacing:.04em; }
+.calc-line-val { font-family:var(--mono); font-size:12px; color:var(--text2); }
+.calc-total { display:flex; justify-content:space-between; align-items:baseline; padding-top:12px; margin-top:6px; border-top:1px solid rgba(201,169,110,.2); }
+.calc-total-label { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+.calc-total-val { font-family:var(--mono); font-size:22px; color:var(--gold); font-weight:400; }
+
+.latency-panel { background:var(--surface1); border:1px solid rgba(201,169,110,.1); border-radius:4px; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+.latency-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.latency-title { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--text3); }
+.live-badge { display:flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#22c55e; }
+.latency-canvas-wrap { position:relative; height:160px; }
+.latency-canvas-wrap svg { width:100%; height:100%; }
+.latency-legend { display:flex; gap:20px; margin-top:12px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.06em; color:var(--text3); }
+.legend-dot { width:8px; height:3px; border-radius:2px; }
+
+.sdk-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.sdk-badge { background:var(--surface1); border:1px solid var(--border); border-radius:3px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; opacity:0; transform:translateY(10px); transition:all 400ms var(--ease); }
+.sdk-badge.visible { opacity:1; transform:none; }
+.sdk-badge:hover { border-color:rgba(201,169,110,.2); transform:translateY(-2px); }
+.sdk-name { font-size:13px; font-weight:500; color:var(--text); letter-spacing:.04em; }
+.sdk-version { font-family:var(--mono); font-size:10px; color:#22c55e; letter-spacing:.06em; }
+.sdk-maintained { font-size:9px; letter-spacing:.08em; color:var(--text3); text-transform:uppercase; }
+
+/* ── COMPLIANCE ── */
+#compliance { background:var(--surface1); border-top:1px solid var(--border); }
+.compliance-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:48px 0; }
+.compliance-badge { background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:20px 16px; text-align:center; transition:all 300ms; cursor:default; }
+.compliance-badge:hover { border-color:rgba(201,169,110,.25); transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,0,0,.3), 0 0 0 1px rgba(201,169,110,.08); }
+.compliance-badge-icon { font-size:22px; margin-bottom:10px; }
+.compliance-badge-name { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--text); margin-bottom:4px; }
+.compliance-badge-desc { font-size:10px; color:var(--text3); letter-spacing:.04em; }
+
+/* ── PRICING ── */
+#pricing { border-bottom:1px solid var(--border); }
+.pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:56px auto 40px; max-width:1000px; }
+.pricing-card { background:var(--surface1); border:1px solid var(--border); border-radius:4px; padding:32px; transition:all 300ms; position:relative; }
+.pricing-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,.35), 0 0 0 1px rgba(201,169,110,.06); }
+.pricing-card.featured { border-color:rgba(201,169,110,.25); background:linear-gradient(160deg,var(--surface1) 0%,rgba(30,25,12,.6) 100%); }
+
+.pricing-tier { font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+.pricing-name { font-family:var(--serif); font-size:28px; font-weight:400; color:var(--text); margin-bottom:4px; }
+.pricing-price { font-family:var(--mono); font-size:32px; font-weight:300; color:var(--text); margin-bottom:4px; line-height:1.2; }
+.pricing-price sub { font-size:14px; color:var(--text2); font-weight:400; }
+.pricing-desc { font-size:13px; color:var(--text2); line-height:1.6; margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid var(--border); min-height:60px; }
+.pricing-features { list-style:none; margin-bottom:28px; }
+.pricing-features li { font-size:13px; color:var(--text2); padding:7px 0; border-bottom:1px solid rgba(255,255,255,.03); display:flex; align-items:flex-start; gap:10px; }
+.pricing-features li::before { content:'—'; color:var(--gold); flex-shrink:0; margin-top:1px; }
+.pricing-footnote { max-width:700px; margin:0 auto; text-align:center; font-family:var(--serif); font-size:15px; font-style:italic; color:var(--text3); line-height:1.7; }
+
+/* ── FOUNDER ── */
+#founder { border-bottom:1px solid var(--border); background:var(--surface1); }
+.founder-inner { max-width:800px; margin:0 auto; text-align:center; padding:120px 40px; }
+.founder-quote-mark { font-family:var(--serif); font-size:80px; line-height:.8; color:rgba(201,169,110,.2); margin-bottom:24px; display:block; }
+.founder-quote { font-family:var(--serif); font-size:clamp(20px,2.5vw,28px); font-weight:300; font-style:italic; line-height:1.7; color:var(--text); margin-bottom:40px; }
+.founder-quote em { color:var(--gold-light); font-style:normal; }
+.founder-name { font-size:11px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:4px; }
+.founder-title { font-size:12px; letter-spacing:.08em; color:var(--text3); }
+
+/* ── BOTTOM CTA ── */
+#cta-bottom {
+  position:relative;
+  overflow:hidden;
+  padding:120px 40px;
+  text-align:center;
+  cursor:crosshair;
+}
+#cta-bottom::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 60% 70% at 50% 50%, rgba(201,169,110,.07) 0%, transparent 70%);
+  pointer-events:none;
+}
+.cta-bottom-h { font-family:var(--serif); font-size:clamp(40px,6vw,80px); font-weight:400; color:var(--text); margin-bottom:16px; line-height:1.1; }
+.cta-bottom-sub { font-size:17px; color:var(--text2); max-width:480px; margin:0 auto 48px; line-height:1.7; }
+.cta-bottom-actions { display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap; }
+
+/* ── FOOTER ── */
+footer { background:var(--surface1); border-top:1px solid var(--border); padding:80px 40px 40px; }
+
+.footer-bottom { border-top:1px solid var(--border); padding-top:24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.footer-legal { font-size:11px; color:var(--text3); letter-spacing:.04em; }
+.footer-socials { display:flex; gap:16px; }
+/* ── RESPONSIVE ── */
+@media (max-width:1024px) {
+  .feature-inner { flex-direction:column !important; gap:48px; }
+  .feature-demo { width:100%; }
+  .db-body { grid-template-columns:180px 1fr; }
+  .db-kpis { grid-template-columns:repeat(2,1fr); }
+  .compliance-grid { grid-template-columns:repeat(4,1fr); }
+}
+@media (max-width:768px) {
+  nav { padding:0 20px; }
+  .nav-links, .nav-ctas { display:none; }
+  .nav-hamburger { display:flex; }
+  .hero-inner { text-align:left; }
+  .hero-ctas { justify-content:flex-start; }
+  .pillars { grid-template-columns:1fr; gap:40px; }
+  .db-body { grid-template-columns:1fr; }
+  .db-sidebar { display:none; }
+  .db-charts { grid-template-columns:1fr; }
+  .db-kpis { grid-template-columns:repeat(2,1fr); }
+  .pricing-grid { grid-template-columns:1fr; max-width:400px; }
+  .compliance-grid { grid-template-columns:repeat(2,1fr); }
+  .container { padding:0 20px; }
+  .feature-inner { padding:0 20px; }
+  .section-pad { padding:80px 0; }
+  #dashboard-section { padding:80px 20px; }
+  .sdk-grid { grid-template-columns:1fr; }
+  .db-topbar { flex-wrap:wrap; gap:8px; }
+  .db-hold-alert { flex-direction:column; }
+  .db-hold-actions { flex-direction:row; }
+  .modal-box { padding:32px 24px; }
+}
+@media (max-width:480px) {
+  .hero-ctas { flex-direction:column; align-items:flex-start; }
+  .cta-bottom-actions { flex-direction:column; align-items:center; }
+  .db-kpis { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <svg class="logo-mark" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 1L20 6.5V15.5L11 21L2 15.5V6.5L11 1Z" stroke="#c9a96e" stroke-width="1" fill="none" opacity=".7"/>
+      <path d="M11 5L17 8.5V14.5L11 18L5 14.5V8.5L11 5Z" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,.06)"/>
+      <circle cx="11" cy="11" r="2" fill="#c9a96e" opacity=".9"/>
+    </svg>
+    <span class="logo-wordmark">Bayana</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#philosophy">Platform</a></li>
+    <li><a href="#dashboard-section">NURU AI</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#compliance">Compliance</a></li>
+    <li><a href="#founder">About</a></li>
+  </ul>
+  <div class="nav-ctas">
+    <a href="#" class="btn-ghost">Sign In</a>
+    <button class="btn-gold" onclick="openModal()">Request Access</button>
+  </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu">
+  <button id="menu-close" aria-label="Close">&#215;</button>
+  <a href="#philosophy" onclick="closeMobile()">Platform</a>
+  <a href="#dashboard-section" onclick="closeMobile()">NURU AI</a>
+  <a href="#pricing" onclick="closeMobile()">Pricing</a>
+  <a href="#compliance" onclick="closeMobile()">Compliance</a>
+  <a href="#founder" onclick="closeMobile()">About</a>
+  <button class="btn-gold" style="margin-top:20px;max-width:200px" onclick="closeMobile();openModal()">Request Access</button>
+</div>
+
+<!-- REQUEST ACCESS MODAL -->
+<div id="access-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">&#215;</button>
+    <div id="modal-form-wrap">
+      <span class="modal-overline">By Application Only</span>
+      <h2 class="modal-title">Request Access</h2>
+      <form id="access-form" action="https://formspree.io/f/xredrwdo" method="POST" onsubmit="submitAccessForm(event)">
+        <input type="hidden" name="_subject" value="Bayana Access Request">
+        <input type="hidden" name="_replyto" id="f-reply">
+        <div class="modal-field">
+          <label class="modal-label" for="f-name">Full Name</label>
+          <input class="modal-input" id="f-name" name="name" type="text" placeholder="Jane Thornton" required>
+        </div>
+        <div class="modal-field">
+          <label class="modal-label" for="f-org">Organisation</label>
+          <input class="modal-input" id="f-org" name="organisation" type="text" placeholder="Anchorage Digital" required>
+        </div>
+        <div class="modal-field">
+          <label class="modal-label" for="f-email">Work Email</label>
+          <input class="modal-input" id="f-email" name="email" type="email" placeholder="jane@institution.com" required>
+        </div>
+        <div class="modal-field">
+          <label class="modal-label" for="f-msg">How can Bayana serve your organisation?</label>
+          <textarea class="modal-textarea" id="f-msg" name="message" placeholder="Describe your compliance infrastructure requirements..." required></textarea>
+        </div>
+        <button type="submit" class="btn-gold modal-submit">Send Request</button>
+      </form>
+    </div>
+    <div class="modal-success" id="modal-success">
+      <span class="modal-success-icon">&#10003;</span>
+      <div class="modal-success-title">Request Received.</div>
+      <p class="modal-success-msg">Thank you. A member of our institutional team will be in touch within one business day.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <span class="hero-overline reveal">Precision Compliance Infrastructure &middot; Powered by NURU AI 3.0</span>
+    <h1 class="hero-h1 reveal reveal-delay-1">Infrastructure Built for Organizations That <em>Cannot Afford</em> to Be Wrong.</h1>
+    <p class="hero-sub reveal reveal-delay-2">Bayana delivers the world's first pre-transaction agentic compliance control plane for regulated financial institutions, VASPs, and the AI agents that serve them. Every compliance decision is made before a single dollar moves.</p>
+    <div class="hero-ctas reveal reveal-delay-3">
+      <button class="btn-gold" onclick="openModal()">Request Access</button>
+    </div>
+  </div>
+</section>
+
+<!-- NURU AI CFO DASHBOARD -->
+<section id="dashboard-section">
+  <div class="dashboard-label reveal">
+    <span class="overline" style="display:flex;justify-content:center;margin-bottom:16px">NURU AI 3.0 &mdash; CFO Dashboard</span>
+    <div class="gold-rule" style="margin:0 auto 20px"></div>
+    <h2>The Compliance Command Centre.</h2>
+    <p>A single-screen institutional compliance command centre. Live health across all corridors. Real-time pre-broadcast HOLD events with full CFO decision authority. Every action cryptographically sealed.</p>
+  </div>
+
+  <div class="nuru-dashboard reveal reveal-delay-2">
+    <div class="db-topbar">
+      <div class="db-topbar-left">
+        <span class="db-brand">NURU AI 3.0</span>
+        <span><span class="db-status-dot"></span><span class="db-status-text">All Systems Nominal</span></span>
+      </div>
+      <div class="db-topbar-right">
+        <span class="db-date" id="db-date">2026-05-28 &middot; 14:32:08 UTC</span>
+        <span class="db-alert-badge">1 Active Hold</span>
+      </div>
+    </div>
+    <div class="db-nav">
+      <div class="db-nav-item active">Overview</div>
+      <div class="db-nav-item">Transaction Command</div>
+      <div class="db-nav-item">Corridor Intelligence</div>
+      <div class="db-nav-item">AML / Sanctions</div>
+      <div class="db-nav-item">KYA &mdash; Agent Registry</div>
+      <div class="db-nav-item">Audit Log</div>
+      <div class="db-nav-item">Settings</div>
+    </div>
+    <div class="db-body">
+      <div class="db-sidebar">
+        <div class="db-sidebar-section">
+          <div class="db-sidebar-label">Compliance Health</div>
+          <div class="db-health-bar">
+            <div class="db-health-label">System Status</div>
+            <div class="db-health-row">
+              <span class="db-health-name">AML Engine</span>
+              <div class="db-health-track"><div class="db-health-fill green" style="width:0" data-target="100"></div></div>
+              <span class="db-health-val" style="color:#22c55e">100%</span>
+            </div>
+            <div class="db-health-row">
+              <span class="db-health-name">OFAC Screen</span>
+              <div class="db-health-track"><div class="db-health-fill green" style="width:0" data-target="100"></div></div>
+              <span class="db-health-val" style="color:#22c55e">100%</span>
+            </div>
+            <div class="db-health-row">
+              <span class="db-health-name">KYA Layer</span>
+              <div class="db-health-track"><div class="db-health-fill green" style="width:0" data-target="99"></div></div>
+              <span class="db-health-val" style="color:#22c55e">99%</span>
+            </div>
+            <div class="db-health-row">
+              <span class="db-health-name">ZK Identity</span>
+              <div class="db-health-track"><div class="db-health-fill green" style="width:0" data-target="100"></div></div>
+              <span class="db-health-val" style="color:#22c55e">100%</span>
+            </div>
+            <div class="db-health-row">
+              <span class="db-health-name">MPC Custody</span>
+              <div class="db-health-track"><div class="db-health-fill green" style="width:0" data-target="100"></div></div>
+              <span class="db-health-val" style="color:#22c55e">100%</span>
+            </div>
+          </div>
+        </div>
+        <div class="db-sidebar-section">
+          <div class="db-sidebar-label">Navigation</div>
+          <div class="db-sidebar-item active">
+            <svg class="db-sidebar-item-icon" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+            <span class="db-sidebar-item-text">Overview</span>
+          </div>
+          <div class="db-sidebar-item">
+            <svg class="db-sidebar-item-icon" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="db-sidebar-item-text">Active Holds</span>
+            <span class="db-sidebar-badge red">1</span>
+          </div>
+          <div class="db-sidebar-item">
+            <svg class="db-sidebar-item-icon" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="db-sidebar-item-text">Tx History</span>
+          </div>
+          <div class="db-sidebar-item">
+            <svg class="db-sidebar-item-icon" viewBox="0 0 14 14" fill="none"><path d="M7 1L13 4v6l-6 3L1 10V4l6-3z" stroke="currentColor" stroke-width="1.2"/></svg>
+            <span class="db-sidebar-item-text">KYA Agents</span>
+            <span class="db-sidebar-badge">247</span>
+          </div>
+          <div class="db-sidebar-item">
+            <svg class="db-sidebar-item-icon" viewBox="0 0 14 14" fill="none"><path d="M1 11V3l6 4 6-4v8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="db-sidebar-item-text">NURU Feed</span>
+          </div>
+        </div>
+        <div class="db-sidebar-section">
+          <div class="db-sidebar-label">Active Corridors</div>
+          <div class="db-sidebar-item">
+            <span style="font-size:12px">&#127482;&#127480;</span>
+            <span class="db-sidebar-item-text">US &rarr; KE</span>
+            <span class="db-sidebar-badge green">Live</span>
+          </div>
+          <div class="db-sidebar-item">
+            <span style="font-size:12px">&#127482;&#127480;</span>
+            <span class="db-sidebar-item-text">US &rarr; UAE</span>
+            <span class="db-sidebar-badge green">Live</span>
+          </div>
+          <div class="db-sidebar-item">
+            <span style="font-size:12px">&#127482;&#127480;</span>
+            <span class="db-sidebar-item-text">US &rarr; NG</span>
+            <span class="db-sidebar-badge green">Live</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="db-main">
+        <div class="db-kpis">
+          <div class="db-kpi">
+            <div class="db-kpi-label">Session Volume</div>
+            <div class="db-kpi-value gold">$4.2M</div>
+            <div class="db-kpi-sub">47 transactions &middot; Phase 1 Sandbox</div>
+          </div>
+          <div class="db-kpi">
+            <div class="db-kpi-label">Compliance Clearance</div>
+            <div class="db-kpi-value green">99.6%</div>
+            <div class="db-kpi-sub">Auto-cleared, pre-broadcast</div>
+            <div class="db-kpi-delta">Phase 1 Sandbox Result</div>
+          </div>
+          <div class="db-kpi">
+            <div class="db-kpi-label">Active Hold Events</div>
+            <div class="db-kpi-value red">1</div>
+            <div class="db-kpi-sub">OFAC match &middot; Awaiting decision</div>
+          </div>
+          <div class="db-kpi">
+            <div class="db-kpi-label">Decision Latency</div>
+            <div class="db-kpi-value">13ms</div>
+            <div class="db-kpi-sub">Phase 1 Sandbox &middot; p50 median</div>
+          </div>
+        </div>
+
+        <div class="db-hold-alert">
+          <div class="db-hold-icon">&#128274;</div>
+          <div class="db-hold-content">
+            <div class="db-hold-title">
+              Pre-Broadcast HOLD Initiated
+              <span class="hold-tag">OFAC MATCH</span>
+              <span class="hold-tag" style="color:#818cf8;border-color:rgba(99,102,241,.2);background:rgba(99,102,241,.1)">KYA VERIFY</span>
+            </div>
+            <div class="db-hold-desc">
+              NURU AI 3.0 has suspended transaction TX-2026-88472 pre-broadcast. Counterparty wallet flagged against OFAC SDN List. No funds have moved. Cryptographic hold record sealed. Awaiting authorised decision from the CFO Dashboard.
+            </div>
+            <div class="db-hold-meta">
+              <span class="db-hold-meta-item">Amount: <span>$184,200.00 USAT</span></span>
+              <span class="db-hold-meta-item">Corridor: <span>US &rarr; AE</span></span>
+              <span class="db-hold-meta-item">Agent: <span>agt_fin_9x44z</span></span>
+              <span class="db-hold-meta-item">Hold Duration: <span id="hold-timer">00:08:14</span></span>
+              <span class="db-hold-meta-item">Sealed: <span>Block #20841927</span></span>
+            </div>
+          </div>
+          <div class="db-hold-actions">
+            <button class="db-action-btn db-action-release">&#10003; Release</button>
+            <button class="db-action-btn db-action-reject">&#215; Reject</button>
+            <button class="db-action-btn db-action-escalate">&#8599; Escalate</button>
+          </div>
+        </div>
+
+        <div class="db-charts">
+          <div class="db-chart-card">
+            <div class="db-chart-title">Decision Latency &mdash; Phase 1 Sandbox (ms)</div>
+            <div class="db-latency-chart">
+              <svg id="latency-svg" viewBox="0 0 380 70" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#c9a96e" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <line x1="0" y1="15" x2="380" y2="15" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="0" y1="35" x2="380" y2="35" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="0" y1="55" x2="380" y2="55" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <polyline id="p99-line" points="" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+                <path id="p50-fill" d="" fill="url(#goldGrad)"/>
+                <polyline id="p50-line" points="" fill="none" stroke="#c9a96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle id="live-dot" cx="370" cy="58" r="4" fill="#22c55e"/>
+                <circle cx="370" cy="58" r="8" fill="none" stroke="#22c55e" stroke-width="1" opacity="0.4">
+                  <animate attributeName="r" values="4;12;4" dur="2s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <text x="4" y="12" fill="#4a4a6a" font-size="8" font-family="JetBrains Mono">300ms (industry benchmark)</text>
+                <text x="4" y="66" fill="#c9a96e" font-size="8" font-family="JetBrains Mono">13ms (NURU AI 3.0 &mdash; Phase 1)</text>
+              </svg>
+            </div>
+            <div class="latency-legend">
+              <span class="legend-item"><span class="legend-dot" style="background:#c9a96e"></span>NURU AI 3.0 p50</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#6366f1"></span>Industry p99</span>
+              <span class="legend-item" style="gap:5px"><span class="db-status-dot" style="width:7px;height:7px;margin-right:2px"></span>Sandbox Active</span>
+            </div>
+          </div>
+
+          <div class="db-chart-card">
+            <div class="db-chart-title">Corridor Intelligence &mdash; Phase 1 Sandbox Volume</div>
+            <div class="db-corridors">
+              <div class="db-corridor-row">
+                <span class="db-corridor-flag">&#127482;&#127480;</span>
+                <span class="db-corridor-name">US &rarr; Kenya</span>
+                <div class="db-corridor-bar-wrap"><div class="db-corridor-bar"><div class="db-corridor-fill" style="width:0" data-target="85"></div></div></div>
+                <span class="db-corridor-vol">$18.4M</span>
+                <span class="db-corridor-status status-clear">Clear</span>
+              </div>
+              <div class="db-corridor-row">
+                <span class="db-corridor-flag">&#127482;&#127480;</span>
+                <span class="db-corridor-name">US &rarr; UAE</span>
+                <div class="db-corridor-bar-wrap"><div class="db-corridor-bar"><div class="db-corridor-fill" style="width:0" data-target="65"></div></div></div>
+                <span class="db-corridor-vol">$14.2M</span>
+                <span class="db-corridor-status status-clear">Clear</span>
+              </div>
+              <div class="db-corridor-row">
+                <span class="db-corridor-flag">&#127482;&#127480;</span>
+                <span class="db-corridor-name">US &rarr; Nigeria</span>
+                <div class="db-corridor-bar-wrap"><div class="db-corridor-bar"><div class="db-corridor-fill" style="width:0" data-target="46"></div></div></div>
+                <span class="db-corridor-vol">$9.8M</span>
+                <span class="db-corridor-status status-monitor">Monitor</span>
+              </div>
+              <div class="db-corridor-row">
+                <span class="db-corridor-flag">&#127482;&#127480;</span>
+                <span class="db-corridor-name">US &rarr; LATAM</span>
+                <div class="db-corridor-bar-wrap"><div class="db-corridor-bar"><div class="db-corridor-fill" style="width:0" data-target="25"></div></div></div>
+                <span class="db-corridor-vol">$5.4M</span>
+                <span class="db-corridor-status status-clear">Clear</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="db-audit-feed">
+          <div class="db-audit-title">
+            NURU AI Intelligence Feed &mdash; Cryptographic Audit Log
+            <span class="db-audit-live">Live</span>
+          </div>
+          <div id="audit-log">
+            <div class="db-log-entry">
+              <span class="db-log-ts">14:32:08</span>
+              <span class="db-log-type log-hold">HOLD</span>
+              <span class="db-log-msg">TX-2026-88472 suspended pre-broadcast. OFAC SDN match. Amount: $184,200 USAT.</span>
+              <span class="db-log-hash">0xf8a2&hellip;e4c1</span>
+            </div>
+            <div class="db-log-entry">
+              <span class="db-log-ts">14:31:54</span>
+              <span class="db-log-type log-clear">CLEAR</span>
+              <span class="db-log-msg">TX-2026-88471 auto-cleared. KYC &#10003; KYB &#10003; OFAC &#10003; ZK credential verified. $42,100 USAT. US&rarr;KE.</span>
+              <span class="db-log-hash">0xa3c9&hellip;11f4</span>
+            </div>
+            <div class="db-log-entry">
+              <span class="db-log-ts">14:31:41</span>
+              <span class="db-log-type log-kya">KYA</span>
+              <span class="db-log-msg">Agent agt_fin_9x44z registered. ZK credential issued. Scoped session key assigned.</span>
+              <span class="db-log-hash">0xb71e&hellip;99a2</span>
+            </div>
+            <div class="db-log-entry">
+              <span class="db-log-ts">14:31:29</span>
+              <span class="db-log-type log-clear">CLEAR</span>
+              <span class="db-log-msg">TX-2026-88470 auto-cleared. $220,000 USAT. US&rarr;UAE. Pre-broadcast confirmation sealed.</span>
+              <span class="db-log-hash">0xd442&hellip;5c7b</span>
+            </div>
+            <div class="db-log-entry">
+              <span class="db-log-ts">14:30:58</span>
+              <span class="db-log-type log-kyc">KYC</span>
+              <span class="db-log-msg">Individual verification complete. iBeta PAD L1 biometric passed. W3C VC issued.</span>
+              <span class="db-log-hash">0xc119&hellip;3e8d</span>
+            </div>
+            <div class="db-log-entry">
+              <span class="db-log-ts">14:30:44</span>
+              <span class="db-log-type log-clear">CLEAR</span>
+              <span class="db-log-msg">TX-2026-88469 auto-cleared. $78,500 USAT. US&rarr;NG. AML watchlist checked. 12ms.</span>
+              <span class="db-log-hash">0xe98a&hellip;2f6c</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy">
+  <div class="container section-pad">
+    <div class="philosophy-inner">
+      <span class="overline reveal" style="display:flex;justify-content:center">The Bayana Standard</span>
+      <div class="gold-rule" style="margin:16px auto 32px"></div>
+      <p class="philosophy-manifesto reveal reveal-delay-1">
+        Most compliance infrastructure was built to be sold, not to be trusted. Bayana was built for the organizations where a single failure has consequences that are regulatory, reputational and <em>irreversible</em>. We believe that precision and speed are not a tradeoff. That agentic commerce and institutional compliance are not in contention. That NURU AI is the category-defining, first-principles build of the fourth industrial revolution of institutional-grade infrastructure.
+      </p>
+      <div class="pillars">
+        <div class="reveal">
+          <div class="pillar-num">I</div>
+          <div class="gold-rule" style="margin:0 0 16px"></div>
+          <div class="pillar-title">Pre-Transaction Control</div>
+          <p class="pillar-body">Every screening decision is made before a single dollar moves. Not a retrospective flag after funds have settled, but a cryptographically sealed HOLD instruction issued pre-broadcast. No funds are ever at risk of non-compliant movement.</p>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <div class="pillar-num">II</div>
+          <div class="gold-rule" style="margin:0 0 16px"></div>
+          <div class="pillar-title">Machine-Speed Identity</div>
+          <p class="pillar-body">In Phase 1 sandbox testing, NURU AI 3.0 achieved a 13ms median decision latency across KYC, KYB, and KYA verification, compared to an industry standard of 300ms. Zero-knowledge credentials verify once and travel everywhere, with no PII stored centrally.</p>
+        </div>
+        <div class="reveal reveal-delay-3">
+          <div class="pillar-num">III</div>
+          <div class="gold-rule" style="margin:0 0 16px"></div>
+          <div class="pillar-title">Non-Custodial</div>
+          <p class="pillar-body">Bayana never holds keys. Non-custodial MPC is enforced at the infrastructure level through AWS Nitro Enclave hardware isolation. It is not a policy or a promise; it is an architectural constraint that no operator can override.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- FEATURE 05: Pricing -->
+<section class="feature-section">
+  <div class="feature-inner">
+    <div class="feature-text">
+      <div class="feature-num reveal">03</div>
+      <h2 class="feature-h2 reveal reveal-delay-1">Pricing as Honest as the Product.</h2>
+      <p class="feature-body reveal reveal-delay-2">Every price is visible to your CFO and authorised company users on the dashboard. Every module is itemised. The figure your compliance team approves is the figure that appears on your invoice, with no hidden uplift, no bundled minimums, and no renegotiation at renewal. Configure your expected monthly verification volume below and review the exact cost breakdown.</p>
+    </div>
+    <div class="feature-demo reveal reveal-delay-2">
+      <div class="calc-panel">
+        <div class="calc-slider-wrap">
+          <div class="calc-slider-label">
+            <span class="calc-slider-name">Verifications per month</span>
+            <span class="calc-slider-val" id="slider-vol-val">10,000</span>
+          </div>
+          <input type="range" id="calc-slider" min="1000" max="500000" step="1000" value="10000">
+        </div>
+        <div class="calc-breakdown">
+          <div class="calc-line">
+            <span class="calc-line-label">KYA agent verification ($0.15 per agent)</span>
+            <span class="calc-line-val" id="calc-kya">$1,500</span>
+          </div>
+          <div class="calc-line">
+            <span class="calc-line-label">AML screening ($0.20 per check)</span>
+            <span class="calc-line-val" id="calc-aml">$2,000</span>
+          </div>
+          <div class="calc-line">
+            <span class="calc-line-label">OFAC pre-broadcast ($0.05 per transaction)</span>
+            <span class="calc-line-val" id="calc-ofac">$500</span>
+          </div>
+          <div class="calc-line">
+            <span class="calc-line-label">KYC / KYB entity checks ($0.33 per check)</span>
+            <span class="calc-line-val" id="calc-kyc">$3,300</span>
+          </div>
+          <div class="calc-line">
+            <span class="calc-line-label">Platform SaaS (Professional)</span>
+            <span class="calc-line-val">$15,000</span>
+          </div>
+          <div class="calc-total">
+            <span class="calc-total-label">Monthly Total</span>
+            <span class="calc-total-val" id="calc-total">$20,800</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section id="compliance">
+  <div class="container section-pad">
+    <div class="reveal" style="text-align:center">
+      <span class="overline">Regulatory Confidence</span>
+      <div class="gold-rule" style="margin:16px auto 20px"></div>
+      <h2 class="serif" style="font-size:clamp(32px,4vw,52px);font-weight:400;color:var(--text);margin-bottom:16px">Open a new corridor. We carry the compliance weight.</h2>
+      <p style="font-size:16px;color:var(--text2);max-width:680px;margin:0 auto">Bayana's architecture is designed to be fully compliant with all governing laws in the United States, including the GENIUS Act, the Bank Secrecy Act and the forthcoming Clarity Act, as well as all applicable laws and guiding regulations in every jurisdiction to which we connect our American institutional clients. When you are ready to expand to any global hub, Bayana is your plug-and-play agentic commerce infrastructure bridge.</p>
+    </div>
+    <div class="compliance-grid">
+      <div class="compliance-badge reveal">
+        <div class="compliance-badge-icon">&#128737;</div>
+        <div class="compliance-badge-name">GENIUS Act</div>
+        <div class="compliance-badge-desc">US-first architecture &middot; Pre-transaction</div>
+      </div>
+      <div class="compliance-badge reveal reveal-delay-1">
+        <div class="compliance-badge-icon">&#128272;</div>
+        <div class="compliance-badge-name">SOC 2 Type I</div>
+        <div class="compliance-badge-desc">In progress &middot; Q4 2026</div>
+      </div>
+      <div class="compliance-badge reveal reveal-delay-2">
+        <div class="compliance-badge-icon">&#128203;</div>
+        <div class="compliance-badge-name">ISO/IEC 27001</div>
+        <div class="compliance-badge-desc">ISMS implementation commenced</div>
+      </div>
+      <div class="compliance-badge reveal reveal-delay-3">
+        <div class="compliance-badge-icon">&#128065;</div>
+        <div class="compliance-badge-name">iBeta PAD L1</div>
+        <div class="compliance-badge-desc">Via certified infrastructure partner</div>
+      </div>
+      <div class="compliance-badge reveal reveal-delay-1">
+        <div class="compliance-badge-icon">&#9878;&#65039;</div>
+        <div class="compliance-badge-name">BSA / FinCEN</div>
+        <div class="compliance-badge-desc">MSB registration in progress</div>
+      </div>
+      <div class="compliance-badge reveal reveal-delay-2">
+        <div class="compliance-badge-icon">&#127758;</div>
+        <div class="compliance-badge-name">OFAC / SDN</div>
+        <div class="compliance-badge-desc">Pre-broadcast screening &middot; 13ms sandbox</div>
+      </div>
+      <div class="compliance-badge reveal reveal-delay-3">
+        <div class="compliance-badge-icon">&#128225;</div>
+        <div class="compliance-badge-name">FATF Travel Rule</div>
+        <div class="compliance-badge-desc">IVMS 101 automated pre-settlement</div>
+      </div>
+      <div class="compliance-badge reveal reveal-delay-4">
+        <div class="compliance-badge-icon">&#127960;</div>
+        <div class="compliance-badge-name">VASP Act 2025</div>
+        <div class="compliance-badge-desc">Kenya MVP &middot; Q3 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container section-pad">
+    <div class="reveal" style="text-align:center">
+      <span class="overline">Pricing</span>
+      <div class="gold-rule" style="margin:16px auto 20px"></div>
+      <h2 class="serif" style="font-size:clamp(32px,4vw,52px);font-weight:400;color:var(--text)">Transparent by Principle.</h2>
+    </div>
+    <div class="pricing-grid" style="grid-template-columns:repeat(2,1fr);max-width:800px">
+      <div class="pricing-card reveal">
+        <div class="pricing-tier">Professional</div>
+        <div class="pricing-name">Professional</div>
+        <div class="pricing-price" style="font-size:22px;margin-bottom:8px">Usage-Based</div>
+        <p class="pricing-desc">Per-module pricing, itemised and visible to your CFO and all authorised users on the dashboard at all times. You pay precisely for what your organisation processes, nothing more.</p>
+        <ul class="pricing-features">
+          <li>KYC: $0.33 per verification</li>
+          <li>KYB: $2.00 per entity</li>
+          <li>AML screening: $0.20 per check</li>
+          <li>OFAC pre-broadcast hold: $0.05 per transaction</li>
+          <li>KYA agent registration: $0.15 per agent</li>
+          <li>ZK credential issuance: $0.08 per credential</li>
+          <li>Full CFO Dashboard access</li>
+          <li>Dedicated 24/7 customer support</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured reveal reveal-delay-1">
+        <div class="pricing-tier">Bespoke</div>
+        <div class="pricing-name">Bespoke</div>
+        <div class="pricing-price" style="font-size:22px;margin-bottom:8px">Configured to your organisation.</div>
+        <p class="pricing-desc">For institutions whose scale, regulatory environment or operational requirements demand infrastructure engineered precisely to their specifications.</p>
+        <ul class="pricing-features">
+          <li>Negotiated transaction volume pricing</li>
+          <li>Dedicated AWS region and sovereign data residency</li>
+          <li>White-label deployment under your institution's brand</li>
+          <li>Bespoke Master Service Agreement</li>
+          <li>SLA configured to your requirements, up to 99.99% uptime</li>
+          <li>Quarterly executive compliance briefing</li>
+          <li>Named, dedicated support agent</li>
+        </ul>
+      </div>
+    </div>
+    <p class="pricing-footnote reveal"><em>"All pricing is visible to the CFO and authorised company users on the dashboard, because we believe the organisations we serve deserve to make fully informed decisions."</em></p>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section id="founder">
+  <div class="founder-inner">
+    <span class="founder-quote-mark reveal">&ldquo;</span>
+    <blockquote class="founder-quote reveal reveal-delay-1">
+      The institutions that will define the next decade of finance are not the ones that move fastest; they are the ones that move correctly. We built Bayana because we looked at the agentic commerce wave approaching, at the trillions in autonomous transactions that will settle before 2030, and we saw a world in which that volume either flows through <em>compliant, accountable, cryptographically verifiable infrastructure</em> or faces the regulatory consequences of having built nothing worthy of the moment. Bayana is the infrastructure that makes the former possible. Not because it is the easiest thing to build, but because it is the only thing worth building.
+    </blockquote>
+    <span class="founder-name reveal reveal-delay-2">Guantai Kathurima</span>
+    <span class="founder-title reveal reveal-delay-3">Founder and Chief Executive Officer &middot; Bayana Inc. &middot; Delaware C-Corporation</span>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section id="cta-bottom">
+  <h2 class="cta-bottom-h reveal">The Standard Awaits.</h2>
+  <div class="cta-bottom-actions reveal reveal-delay-1">
+    <button class="btn-gold" onclick="openModal()">Request Access</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom" style="border-top:1px solid var(--border);padding:32px 40px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:16px">
+    <p class="footer-legal">&copy; 2026 Bayana Inc. Delaware C-Corporation. All rights reserved. &nbsp;&middot;&nbsp; <a href="#" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="#" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Terms of Service</a> &nbsp;&middot;&nbsp; <a href="#" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Cookie Policy</a></p>
+  </div>
+</footer>
+
+<script>
+// ── NAVIGATION ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobile-menu').classList.add('open'));
+document.getElementById('menu-close').addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
+function closeMobile() { document.getElementById('mobile-menu').classList.remove('open'); }
+
+// ── MODAL ──
+function openModal() {
+  document.getElementById('access-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('access-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('access-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function submitAccessForm(e) {
+  e.preventDefault();
+  const form = document.getElementById('access-form');
+  const btn  = form.querySelector('button[type=submit]');
+  const emailVal = document.getElementById('f-email').value;
+  document.getElementById('f-reply').value = emailVal;
+  btn.textContent = 'Sending\u2026';
+  btn.disabled = true;
+
+  fetch('https://formspree.io/f/xredrwdo', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: new FormData(form)
+  })
+  .then(res => {
+    if (res.ok) {
+      document.getElementById('modal-form-wrap').style.display = 'none';
+      document.getElementById('modal-success').style.display   = 'block';
+      setTimeout(closeModal, 4000);
+    } else {
+      btn.textContent = 'Send Request';
+      btn.disabled = false;
+      alert('Something went wrong. Please email guantaik@proton.me directly.');
+    }
+  })
+  .catch(() => {
+    btn.textContent = 'Send Request';
+    btn.disabled = false;
+    alert('Something went wrong. Please email guantaik@proton.me directly.');
+  });
+}
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── LIVE CLOCK ──
+function updateClock() {
+  const el = document.getElementById('db-date');
+  if (!el) return;
+  const now = new Date();
+  const p = n => String(n).padStart(2,'0');
+  el.textContent = now.getUTCFullYear() + '-' + p(now.getUTCMonth()+1) + '-' + p(now.getUTCDate()) + ' \u00B7 ' + p(now.getUTCHours()) + ':' + p(now.getUTCMinutes()) + ':' + p(now.getUTCSeconds()) + ' UTC';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── HOLD TIMER ──
+let holdSeconds = 494;
+setInterval(() => {
+  holdSeconds++;
+  const m = Math.floor(holdSeconds / 60);
+  const s = holdSeconds % 60;
+  const el = document.getElementById('hold-timer');
+  if (el) el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + ':00';
+}, 1000);
+
+// ── HOLD ACTION BUTTONS ──
+document.querySelectorAll('.db-action-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const action = this.classList.contains('db-action-release') ? 'RELEASED' :
+                   this.classList.contains('db-action-reject')  ? 'REJECTED'  : 'ESCALATED';
+    const color  = this.classList.contains('db-action-release') ? '#22c55e' :
+                   this.classList.contains('db-action-reject')  ? '#ef4444'  : '#818cf8';
+    const alert  = this.closest('.db-hold-alert');
+    if (!alert) return;
+    alert.style.transition = 'opacity 500ms, transform 500ms';
+    alert.style.opacity    = '0';
+    alert.style.transform  = 'translateX(20px)';
+    setTimeout(() => {
+      alert.innerHTML = '<div style="font-family:var(--mono);font-size:12px;color:' + color + ';padding:8px 0;letter-spacing:.08em">' +
+        '\u2713 TX-2026-88472 ' + action + ' \u2014 Cryptographic decision record sealed. Immutable audit entry created.<br>' +
+        '<span style="color:var(--text3);font-size:10px;margin-top:6px;display:block">Authorised by CFO Dashboard \u00B7 ' + new Date().toUTCString() + '</span>' +
+        '</div>';
+      alert.style.opacity   = '1';
+      alert.style.transform = 'none';
+      alert.style.borderColor = color + '33';
+      alert.style.background  = color + '0a';
+    }, 500);
+  });
+});
+
+// ── PRICING CALCULATOR ──
+const calcSlider = document.getElementById('calc-slider');
+function updateCalc() {
+  if (!calcSlider) return;
+  const vol   = parseInt(calcSlider.value);
+  const kya   = vol * 0.15;
+  const aml   = vol * 0.20;
+  const ofac  = vol * 0.05;
+  const kyc   = vol * 0.33;
+  const total = kya + aml + ofac + kyc;
+  document.getElementById('slider-vol-val').textContent = vol.toLocaleString();
+  document.getElementById('calc-kya').textContent  = '$' + Math.round(kya).toLocaleString();
+  document.getElementById('calc-aml').textContent  = '$' + Math.round(aml).toLocaleString();
+  document.getElementById('calc-ofac').textContent = '$' + Math.round(ofac).toLocaleString();
+  document.getElementById('calc-kyc').textContent  = '$' + Math.round(kyc).toLocaleString();
+  document.getElementById('calc-total').textContent = '$' + Math.round(total).toLocaleString();
+}
+if (calcSlider) { calcSlider.addEventListener('input', updateCalc); updateCalc(); }
+
+// ── LATENCY SVG ──
+function drawLatencyChart() {
+  const W = 380, H = 70;
+  const p50 = [], p99 = [];
+  for (let x = 0; x <= W; x += 8) {
+    const n = Math.sin(x * 0.05) * 3 + Math.random() * 2;
+    p50.push(x + ',' + (58 - n));
+    p99.push(x + ',' + (15 + n * 0.5));
+  }
+  const l50 = document.getElementById('p50-line');
+  const lf  = document.getElementById('p50-fill');
+  const l99 = document.getElementById('p99-line');
+  if (l50) l50.setAttribute('points', p50.join(' '));
+  if (l99) l99.setAttribute('points', p99.join(' '));
+  if (lf)  lf.setAttribute('d', 'M 0,' + H + ' ' + p50.join(' ') + ' L ' + W + ',' + H + ' Z');
+}
+drawLatencyChart();
+setInterval(drawLatencyChart, 2000);
+
+// ── HEALTH BARS ──
+const dashboard = document.querySelector('.nuru-dashboard');
+if (dashboard) {
+  new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      document.querySelectorAll('.db-health-fill').forEach(b => { b.style.width = b.dataset.target + '%'; });
+    }
+  }, { threshold: 0.1 }).observe(dashboard);
+}
+
+// ── CORRIDOR BARS ──
+setTimeout(() => {
+  document.querySelectorAll('.db-corridor-fill').forEach(b => { b.style.width = b.dataset.target + '%'; });
+}, 600);
+
+// ── AUDIT LOG LIVE FEED ──
+const logTypes = [
+  { type: 'CLEAR', cls: 'log-clear', msgs: [
+    'TX auto-cleared. KYC \u2713 KYB \u2713 OFAC \u2713 ZK credential verified.',
+    'Pre-broadcast compliance verified. USAT. US\u2192KE.',
+    'Agentic transaction cleared. KYA \u2713 Scoped session key valid.',
+  ]},
+  { type: 'KYA', cls: 'log-kya', msgs: [
+    'Agent registered. ZK credential issued. Session key scoped.',
+    'Agent behaviour baseline updated. No anomaly detected.',
+  ]},
+  { type: 'KYC', cls: 'log-kyc', msgs: [
+    'Individual verification complete. iBeta PAD L1 passed. W3C VC issued.',
+    'Entity KYB complete. UBO verified. SAR check passed.',
+  ]},
+];
+function addLogEntry() {
+  const feed = document.getElementById('audit-log');
+  if (!feed) return;
+  const pool  = logTypes[Math.floor(Math.random() * logTypes.length)];
+  const msg   = pool.msgs[Math.floor(Math.random() * pool.msgs.length)];
+  const now   = new Date();
+  const p     = n => String(n).padStart(2,'0');
+  const ts    = p(now.getUTCHours()) + ':' + p(now.getUTCMinutes()) + ':' + p(now.getUTCSeconds());
+  const hash  = '0x' + Math.random().toString(16).substr(2,4) + '\u2026' + Math.random().toString(16).substr(2,4);
+  const entry = document.createElement('div');
+  entry.className    = 'db-log-entry';
+  entry.style.opacity    = '0';
+  entry.style.transition = 'opacity 400ms';
+  entry.innerHTML = '<span class="db-log-ts">' + ts + '</span>' +
+                    '<span class="db-log-type ' + pool.cls + '">' + pool.type + '</span>' +
+                    '<span class="db-log-msg">' + msg + '</span>' +
+                    '<span class="db-log-hash">' + hash + '</span>';
+  feed.insertBefore(entry, feed.firstChild);
+  setTimeout(() => entry.style.opacity = '1', 20);
+  while (feed.children.length > 8) feed.removeChild(feed.lastChild);
+}
+setInterval(addLogEntry, 3500);
+
+// ── NAV TAB CLICK ──
+document.querySelectorAll('.db-nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.db-nav-item').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ── COPY BUTTONS ──
+function copyCode(btn, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText.trim()).then(() => {
+    btn.textContent = 'Copied \u2713';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => { btn.textContent = 'Copied \u2713'; setTimeout(() => btn.textContent = 'Copy', 2000); });
+}
+
+// ── PARALLAX HERO ──
+window.addEventListener('scroll', () => {
+  const hero = document.getElementById('hero');
+  if (hero) hero.style.transform = 'translateY(' + (window.scrollY * 0.12) + 'px)';
+}, { passive: true });
+</script>
+</body>
+</html>
